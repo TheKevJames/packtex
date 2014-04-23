@@ -1,0 +1,15 @@
+Jinja2==2.7.2
+MarkupSafe==0.21
+Pygments==1.6
+Sphinx==1.2.2
+argparse==1.2.1
+cov-core==1.7
+coverage==3.7.1
+docutils==0.11
+py==1.4.20
+pyandoc==0.0.1
+pytest==2.5.2
+pytest-cov==1.6
+stevedore==0.15
+wheel==0.23.0
+wsgiref==0.1.2
