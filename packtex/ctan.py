@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from packtex import local
 
 
-def get_data(package_name):
+def get_data(package):
 	def get_rows(ctan):
 		rows = []
 		tables = ctan.find_all('table')
@@ -28,27 +28,27 @@ def get_data(package_name):
 				version = row.find_all('td')[-1].get_text().strip()
 				return re.sub(r'(SVN)|(\s\d{4}-\d{2}-\d{2})', '', version).strip()
 
-	html = urllib.urlopen('http://www.ctan.org/pkg/' + package_name.lower()).read()
+	html = urllib.urlopen('http://www.ctan.org/pkg/' + package.lower()).read()
 	cover = BeautifulSoup(html)
 
 	try:
 		url = 'http://www.ctan.org/tex-archive' + cover.table.tr.code.get_text()
 	except AttributeError:
-		return None, None, 'was not found on CTAN'
+		return None, None, 1
 	if 'tex-archive/macros/latex/base' in url or 'tex-archive/macros/latex/required' in url:
-		return None, None, 'was installed in base TeX distribution'
+		return None, None, 2
 	elif 'tex-archive/systems' in url:
-		return None, None, 'is a TeX system, not a package'
+		return None, None, 3
 
 	if url[-4] == '.' and url[-3:] in local.get_valid_filetypes():
-		return get_version(cover) or '0', [url], None
+		return get_version(cover) or 'unversioned', [url], 0
 	elif url[-3] == '.' and url[-2:] in local.get_valid_filetypes():
-		return get_version(cover) or '0', [url], None
+		return get_version(cover) or 'unversioned', [url], 0
 
 	html = urllib.urlopen(url).read()
 	details = BeautifulSoup(html)
 
-	version = get_version(details) or get_version(cover) or '0'
+	version = get_version(details) or get_version(cover) or 'unversioned'
 	rows = get_rows(details)
 
-	return version, rows, None
+	return version, rows, 0

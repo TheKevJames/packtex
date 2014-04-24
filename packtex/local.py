@@ -45,7 +45,7 @@ def get_data(package):
 
 
 def get_dirs():
-	return tex_dir, install_dir, discard_dir, metadata
+	return install_dir, discard_dir, metadata
 
 
 def get_path(filetype, package):
@@ -112,6 +112,7 @@ def install_sources(provides, package):
 						continue
 
 				try:
+					print '  building', f[:-4]
 					subprocess.call(['tex', '-interaction=batchmode', f], stdout=open(os.devnull, 'w'), cwd=install_dir)
 
 					dest_dir = get_path('sty', package)
@@ -151,6 +152,7 @@ def install_sources(provides, package):
 				if local_requires:
 					requires.extend(local_requires)
 				else:
+					print '  building', f[:-4]
 					subprocess.call(['latex', '-interaction=batchmode', f], stdout=open(os.devnull, 'w'), cwd=install_dir)
 
 					for line in open(os.path.join(install_dir, f), 'r').readlines():

@@ -25,7 +25,7 @@ def execute_from_command_line():
 
 	if command[0] == 'install':
 		if not packages:
-			print 'Cannot install packages. Error: install command requires arguments'
+			print 'Cannot install packages. Error: install command requires argument(s).'
 			sys.exit(-1)
 
 		for package in packages:
@@ -34,25 +34,25 @@ def execute_from_command_line():
 		info()
 	elif command[0] in {'remove', 'uninstall'}:
 		if not packages:
-			print 'Cannot uninstall packages. Error: uninstall command requires arguments'
+			print 'Cannot uninstall packages. Error: uninstall command requires argument(s).'
 			sys.exit(-1)
 
 		for package in packages:
 			uninstall(package)
 	elif command[0] == 'show':
 		if not packages:
-			print 'Cannot show packages. Error: show command requires arguments'
+			print 'Cannot show packages. Error: show command requires argument(s).'
 			sys.exit(-1)
 
 		for package in packages:
 			show(package)
 	elif command[0] in {'update', 'upgrade'}:
 		if not packages:
-			print 'Cannot upgrade packages. Error: upgrade command requires arguments'
+			print 'Cannot upgrade packages. Error: upgrade command requires argument(s).'
 			sys.exit(-1)
 
 		for package in packages:
 			upgrade(package)
 	else:
-		print 'Could not run PackTeX. Error: ' + command[0] + ' is not a valid command'
+		print 'Could not run PackTeX. Error: ' + command[0] + ' is not a valid command.'
 		sys.exit(-1)

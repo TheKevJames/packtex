@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import io
 import os
-import pandoc
 from pip.req import parse_requirements
 import re
 from setuptools import find_packages, setup
@@ -31,14 +30,8 @@ def find_version(*file_paths):
 	raise RuntimeError('Unable to find version string.')
 
 try:
-	pandoc.core.PANDOC_PATH = '/usr/bin/pandoc'
-
-	doc = pandoc.Document()
-	doc.markdown = open('README.md').read()
-	with open('README.rst', 'w+') as rst:
-		rst.write(doc.rst)
 	long_description = read('README.rst')
-except:
+except IOError:
 	long_description = read('README.md')
 
 requires = [str(ir.req) for ir in parse_requirements('requirements.txt')]

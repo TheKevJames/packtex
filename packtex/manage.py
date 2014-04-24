@@ -7,7 +7,7 @@ import urllib
 from packtex import ctan, local
 
 
-tex_dir, install_dir, discard_dir, metadata = local.get_dirs()
+install_dir, discard_dir, metadata = local.get_dirs()
 if not os.path.isfile(metadata):
 	open(metadata, 'w').close()
 
@@ -23,17 +23,38 @@ def info():
 		print '=='.join(inst.split('==')[:2])
 
 
-def install(package):
+def install(package, parent=None):
+	print ''
 	if local.installed(package):
-		print 'Could not install package ' + package + '. Error: package is already installed'
+		data = local.get_data(package)
+		print 'Requirement already satisfied (use \'update\' or \'upgrade\' to upgrade):', data[0] + '==' + data[1],
+		if parent:
+			print '(from', parent + ')'
+		else:
+			print ''
 	else:
 		version, rows, error = ctan.get_data(package)
-		if error:
-			pass
-			# print "\tError:", package, error
-			# print 'Could not install package ' + package + '. Error: package is installed by default or is a TeX framework'
+		if error != 0:
+			if error == 1:
+				print 'Could not install package. Error:', package, 'was not found on CTAN'
+			elif error == 2:
+				print 'Requirement already satisfied (installed with TeX distribution):', package,
+				if parent:
+					print '(from', parent + ')'
+				else:
+					print ''
+			elif error == 3:
+				print 'Could not install package. Error:', package, 'is a TeX system, not a package'
 		else:
+			print 'Downloading/unpacking', package,
+			if parent:
+				print '(from', parent + ')'
+			else:
+				print ''
 			provides = []
+			sys.stdout.write('  Downloading ' + package + ' [%s]' % (' ' * len(rows)))
+			sys.stdout.flush()
+			sys.stdout.write('\b' * (len(rows) + 1))
 			for row in rows:
 				if isinstance(row, unicode):
 					filename = re.sub(r'.*/(.*)\.(.*)', r'\1.\2', row)
@@ -45,7 +66,6 @@ def install(package):
 					filetype = filename[-2:]
 				else:
 					filetype = None
-				print "\t", filename
 				directory = local.get_path(filetype, package)
 				if not os.path.exists(directory):
 					os.makedirs(directory)
@@ -58,14 +78,17 @@ def install(package):
 				if not url.startswith('http'):
 					url = 'http://www.ctan.org' + url
 				urllib.urlretrieve(url, path)
+				sys.stdout.write('+')
+				sys.stdout.flush()
 				if path[-3:] in {'bst', 'cls', 'sty'}:
 					provides.append(path)
+			sys.stdout.write('\n')
 
 			while os.path.exists(install_dir):
 				provides, requires = local.install_sources(provides, package)
 				for req in requires:
 					if not local.installed(req) and not local.provided(req):
-						install(req)
+						install(req, package)
 			provides = list(set(provides))
 			provides.sort()
 
@@ -85,11 +108,10 @@ def install(package):
 
 			for req in requires:
 				if not local.installed(req) and not local.provided(req):
-					install(req)
+					install(req, package)
 
 	if os.path.exists(discard_dir):
 		shutil.rmtree(discard_dir)
-
 
 
 def show(package):
