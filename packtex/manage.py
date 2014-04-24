@@ -24,7 +24,6 @@ def info():
 
 
 def install(package, parent=None):
-	print ''
 	if local.installed(package):
 		data = local.get_data(package)
 		print 'Requirement already satisfied (use \'update\' or \'upgrade\' to upgrade):', data[0] + '==' + data[1],
@@ -145,22 +144,14 @@ def uninstall(package):
 
 
 def upgrade(package):
-	exists = None
-	installed = open(metadata, 'r').readlines()
-	for inst in installed:
-		data = inst.split('==')
-		if data[0] == package:
-			exists = data[1]
-			break
-	if not exists:
-		print 'Could not update package ' + package + '. Error: package is not installed'
-		sys.exit(-1)
+	if not local.installed(package):
+		print 'Could not update package ' + package + '. Error: package is not installed.'
+	else:
+		installed_version = local.get_data(package)[1]
+		version, _, _ = ctan.get_data(package)
 
-	ctan = ctan.get_data(package)
-	version = ctan.get_version(ctan)
-	if version == exists:
-		print 'Could not update package ' + package + '. Error: package is alread at latest version'
-		return
-
-	uninstall(package)
-	install(package)
+		if installed_version == version:
+			print 'Requirement already up-to-date:', package
+		else:
+			uninstall(package)
+			install(package)
