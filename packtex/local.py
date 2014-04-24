@@ -25,6 +25,7 @@ paths = {
 	'pfb': ['TEXMF', 'fonts', 'type1'],
 	'sty': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
 	'tex': ['TEXMF', 'install'],
+	'txt': ['TEXMF', 'discard'],
 	'ttf': ['TEXMF', 'fonts', 'truetype'],
 	'vf':  ['TEXMF', 'fonts', 'vf'],
 }
@@ -45,7 +46,7 @@ def get_data(package):
 
 
 def get_dirs():
-	return install_dir, discard_dir, metadata
+	return tex_dir, install_dir, discard_dir, metadata
 
 
 def get_path(filetype, package):
@@ -197,8 +198,6 @@ def install_sources(provides, package):
 				dest = os.path.join(dest_dir, f)
 				os.rename(orig, dest)
 				provides.append(dest)
-			elif f.endswith('log') or f.endswith('txt'):
-				os.remove(os.path.join(install_dir, f))
 
 	if not requires:
 		for f in os.listdir(install_dir):

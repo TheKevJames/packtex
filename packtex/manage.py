@@ -7,7 +7,7 @@ import urllib
 from packtex import ctan, local
 
 
-install_dir, discard_dir, metadata = local.get_dirs()
+tex_dir, install_dir, discard_dir, metadata = local.get_dirs()
 if not os.path.isfile(metadata):
 	open(metadata, 'w').close()
 
@@ -45,6 +45,7 @@ def install(package, parent=None):
 			elif error == 3:
 				print 'Could not install package. Error:', package, 'is a TeX system, not a package'
 		else:
+			log = [os.path.join(dp, f) for dp, _, fn in os.walk(tex_dir) for f in fn]
 			print 'Downloading/unpacking', package,
 			if parent:
 				print '(from', parent + ')'
@@ -109,8 +110,18 @@ def install(package, parent=None):
 				if not local.installed(req) and not local.provided(req):
 					install(req, package)
 
-	if os.path.exists(discard_dir):
-		shutil.rmtree(discard_dir)
+			if os.path.exists(discard_dir):
+				shutil.rmtree(discard_dir)
+
+			log = [item for item in [os.path.join(dp, f) for dp, _, fn in os.walk(tex_dir) for f in fn] if item not in log]
+			directory = local.get_path(None, package)
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+
+			with open(os.path.join(directory, '.log'), 'w') as txt:
+				for line in log:
+					txt.write(line)
+					txt.write('\n')
 
 
 def show(package):
@@ -122,25 +133,25 @@ def show(package):
 		print 'Provides:', ', '.join([re.sub(r'(.*/)|(\n)', '', fl) for fl in data[2].split('=')])
 		print 'Requires:', ', '.join(data[3].split('=')).replace('\n', '')
 	else:
-		print 'Could not show details for ' + package + '. Error: package is not installed'
+		print 'Could not show details for ' + package + '. Error: package is not installed.'
 
 
 def uninstall(package):
-	installed = open(metadata, 'r').readlines()
-	for inst in installed:
-		data = inst.split('==')
-		if data[0] == package:
-			for fl in data[2].split('='):
-				os.remove(fl.replace('\n', ''))
+	if local.installed(package):
+		directory = local.get_path(None, package)
+		log_file = os.path.join(directory, '.log')
+		for line in open(log_file, 'r').readlines():
+			os.remove(line.replace('\n', ''))
+		shutil.rmtree(directory)
 
-			with open(metadata, 'w') as meta:
-				for write_inst in installed:
-					if inst != write_inst:
-						meta.write(write_inst)
-				return
-
-	print 'Could not uninstall package ' + package + '. Error: package is not installed'
-	sys.exit(-1)
+		installed = open(metadata, 'r').readlines()
+		with open(metadata, 'w') as meta:
+			for pack in installed:
+				if pack.split('==')[0] != package:
+					meta.write(pack)
+		print 'Successfully uninstalled', package
+	else:
+		print 'Could not uninstall package ' + package + '. Error: package is not installed.'
 
 
 def upgrade(package):
