@@ -35,7 +35,7 @@ try:
 
 	doc = pandoc.Document()
 	doc.markdown = open('README.md').read()
-	with open('README.md', 'w+') as rst:
+	with open('README.rst', 'w+') as rst:
 		rst.write(doc.rst)
 	long_description = read('README.rst')
 except:
@@ -67,6 +67,9 @@ setup(
 	license='MIT License',
 	packages=find_packages(exclude=['test']),
 	include_package_data=True,
+	entry_points={'console_scripts': [
+		'packtex = packtex:execute_from_command_line',
+	]},
 	install_requires=requires,
 	tests_require=['pytest'],
 	zip_safe=False,
