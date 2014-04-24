@@ -51,11 +51,11 @@ class PyTest(TestCommand):
 setup(
 	name='packtex',
 	version=find_version('packtex', '__init__.py'),
-	description='Auto-generated description',
+	description='An easy-to-use, platform-agnostic \*TeX package manager',
 	long_description=long_description,
 	keywords='packtex',
-	author='@TheKevJames (auto-generated)',
-	author_email='KevinJames@thekev.in (auto-generated)',
+	author='Kevin James',
+	author_email='KevinJames@thekev.in',
 	url='https://github.com/TheKevJames/packtex.git',
 	license='MIT License',
 	packages=find_packages(exclude=['test']),
@@ -68,7 +68,7 @@ setup(
 	zip_safe=False,
 	classifiers=[
 		'Programming Language :: Python',
-		'Development Status :: 1 - Planning',
+		'Development Status :: 3 - Alpha',
 		'Natural Language :: English',
 		'Intended Audience :: Developers',
 		'License :: OSI Approved :: MIT License',

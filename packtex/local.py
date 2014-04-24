@@ -25,6 +25,7 @@ paths = {
 	'pfb': ['TEXMF', 'fonts', 'type1'],
 	'sty': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
 	'tex': ['TEXMF', 'install'],
+	'tss': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
 	'txt': ['TEXMF', 'discard'],
 	'ttf': ['TEXMF', 'fonts', 'truetype'],
 	'vf':  ['TEXMF', 'fonts', 'vf'],
@@ -54,7 +55,7 @@ def get_path(filetype, package):
 		try:
 			path = '/'.join(paths[filetype])
 		except KeyError:
-			path = '/'.join(paths['log'])
+			path = 'TEXMF/extras'
 	else:
 		path = '/'.join(paths['sty'])
 	path = path.replace('FONT', font_dir)
