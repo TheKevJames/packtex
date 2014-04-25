@@ -34,7 +34,7 @@ try:
 except IOError:
 	long_description = read('README.md')
 
-requires = [str(ir.req) for ir in parse_requirements('requirements.txt')]
+requires = [str(ir.req) for ir in parse_requirements('requirements/prod.txt')]
 
 class PyTest(TestCommand):
 	def finalize_options(self):
@@ -51,7 +51,7 @@ class PyTest(TestCommand):
 setup(
 	name='packtex',
 	version=find_version('packtex', '__init__.py'),
-	description='An easy-to-use, platform-agnostic \*TeX package manager',
+	description='An easy-to-use, platform-agnostic *TeX package manager',
 	long_description=long_description,
 	keywords='packtex',
 	author='Kevin James',
