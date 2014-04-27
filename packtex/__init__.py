@@ -3,7 +3,7 @@ import sys
 
 from packtex.manage import info, install, show, uninstall, upgrade
 
-__version__ = 'alpha.1'
+__version__ = 'alpha.2'
 
 
 def get_params():
