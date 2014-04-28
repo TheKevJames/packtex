@@ -3,10 +3,10 @@ import urllib
 
 from bs4 import BeautifulSoup
 
-from packtex import local
+from packtex import error, locations
 
 
-def get_data(package):
+def get_data(package, parent=None):
 	def get_rows(ctan):
 		rows = []
 		tables = ctan.find_all('table')
@@ -28,22 +28,25 @@ def get_data(package):
 				version = row.find_all('td')[-1].get_text().strip()
 				return re.sub(r'(SVN)|(\s\d{4}-\d{2}-\d{2})', '', version).strip()
 
-	html = urllib.urlopen('http://www.ctan.org/pkg/' + package.lower()).read()
+	html = urllib.urlopen('http://www.ctan.org/pkg/' + package).read()
 	cover = BeautifulSoup(html)
 
 	try:
 		url = 'http://www.ctan.org/tex-archive' + cover.table.tr.code.get_text()
 	except AttributeError:
-		return None, None, 1
+		if 'Apache Tomcat' in cover or '503 Service Temporarily Unavailable' in cover:
+			error.msg_ctan_down(fail=True)
+		else:
+			error.msg_not_on_ctan(package, fail=True)
 	if 'tex-archive/macros/latex/base' in url or 'tex-archive/macros/latex/required' in url:
-		return None, None, 2
+		error.msg_satisfied(package, parent, fail=True)
 	elif 'tex-archive/systems' in url:
-		return None, None, 3
+		error.msg_not_package(package, fail=True)
 
-	if url[-4] == '.' and url[-3:] in local.get_valid_filetypes():
-		return get_version(cover) or 'unversioned', [url], 0
-	elif url[-3] == '.' and url[-2:] in local.get_valid_filetypes():
-		return get_version(cover) or 'unversioned', [url], 0
+	if url[-4] == '.' and url[-3:] in locations.get_valid_filetypes():
+		return get_version(cover) or 'unversioned', [url]
+	elif url[-3] == '.' and url[-2:] in locations.get_valid_filetypes():
+		return get_version(cover) or 'unversioned', [url]
 
 	html = urllib.urlopen(url).read()
 	details = BeautifulSoup(html)
@@ -51,4 +54,4 @@ def get_data(package):
 	version = get_version(details) or get_version(cover) or 'unversioned'
 	rows = get_rows(details)
 
-	return version, rows, 0
+	return version, rows

@@ -1,9 +1,10 @@
 import argparse
-import sys
 
-from packtex.manage import info, install, show, uninstall, upgrade
+from packtex import error
+from packtex.commands import info, install, show, uninstall, upgrade
 
-__version__ = 'alpha.2'
+
+__version__ = 'v0.1.0-beta'
 
 
 def get_params():
@@ -22,37 +23,23 @@ def get_params():
 
 def execute_from_command_line():
 	command, packages = get_params()
+	error.valid_command(command[0], fail=True)
 
 	if command[0] == 'install':
-		if not packages:
-			print 'Cannot install packages. Error: install command requires argument(s).'
-			sys.exit(-1)
+		error.arguments(command[0], packages, fail=True)
 
-		for package in packages:
-			install(package)
+		install.run(packages)
 	elif command[0] == 'list':
-		info()
+		info.run()
 	elif command[0] in {'remove', 'uninstall'}:
-		if not packages:
-			print 'Cannot uninstall packages. Error: uninstall command requires argument(s).'
-			sys.exit(-1)
+		error.arguments(command[0], packages, fail=True)
 
-		for package in packages:
-			uninstall(package)
+		uninstall.run(packages)
 	elif command[0] == 'show':
-		if not packages:
-			print 'Cannot show packages. Error: show command requires argument(s).'
-			sys.exit(-1)
+		error.arguments(command[0], packages, fail=True)
 
-		for package in packages:
-			show(package)
+		show.run(packages)
 	elif command[0] in {'update', 'upgrade'}:
-		if not packages:
-			print 'Cannot upgrade packages. Error: upgrade command requires argument(s).'
-			sys.exit(-1)
+		error.arguments(command[0], packages, fail=True)
 
-		for package in packages:
-			upgrade(package)
-	else:
-		print 'Could not run PackTeX. Error: ' + command[0] + ' is not a valid command.'
-		sys.exit(-1)
+		upgrade.run(packages)
