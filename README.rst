@@ -4,13 +4,19 @@ PackTeX lets you manage all of your \*TeX packages together, in the same way, wi
 
 Installation
 ============
-PackTeX is now available from [PyPI](https://pypi.python.org/pypi/packtex/)! You can instll the latest beta with:
+PackTeX is now available from `PyPI <https://pypi.python.org/pypi/packtex/>`_! You can instll the latest beta with:
 
     pip install packtex --pre
 
 Or you can build PackTeX from source by cloning this repo and running:
 
     python setup.py install
+
+Some Mac OS X users have reported difficulty in installing PackTeX. The solution, it seems, is to tell pip to install `argparse` from non-standard sources. So, call:
+
+    sudo pip install argparse --allow-external argparse --upgrade
+
+and then run either of the installation options again.
 
 Usage
 =====
@@ -25,4 +31,5 @@ PackTeX supports all your standard package manager commands.
 
 And coming soon:
 * `packtex search` == search for packages on CTAN
+* `packtex freeze` == freeze all package details to be exported into a requirements file
 * `packtex install -r` == install all packages from a requirements file

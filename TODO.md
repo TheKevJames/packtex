@@ -8,6 +8,8 @@ TODO
 	* Handle user- and system-installed packages (kpsewhich)
 	* Install custom packages (i.e. not from CTAN)
 	* Install from requirements file (pip install -r requirements.txt)
+	* Mark dependencies with exact or fuzzy versions (pip freeze)
+		* Default: package>=installed,package<next_major_version?
 	* Search CTAN (pip search)
 	* Operation logging
 * Standardize error handling with rollbacks
