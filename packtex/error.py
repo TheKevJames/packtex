@@ -54,7 +54,7 @@ def updated(package, down, up, fail=False):
 
 
 def valid_command(command, fail=False):
-	if command not in {'install', 'list', 'remove', 'show', 'uninstall', 'update', 'upgrade'}:
+	if command not in {'install', 'freeze', 'list', 'remove', 'show', 'uninstall', 'update', 'upgrade'}:
 		print 'Could not run PackTeX. Error:', command[0], 'is not a valid command.'
 		if fail:
 			sys.exit(-1)

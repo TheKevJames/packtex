@@ -29,8 +29,8 @@ def execute_from_command_line():
 		error.arguments(command[0], packages, fail=True)
 
 		install.run(packages)
-	elif command[0] == 'list':
-		info.run()
+	elif command[0] in {'freeze', 'list'}:
+		info.run(command[0])
 	elif command[0] in {'remove', 'uninstall'}:
 		error.arguments(command[0], packages, fail=True)
 

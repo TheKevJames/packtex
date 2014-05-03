@@ -37,8 +37,8 @@ PackTeX supports all your standard package manager commands.
 * `packtex install` == install a package
 * `packtex uninstall` == uninstall a package
 * `packtex update` == update a package, if it's out of date.
+* `packtex freeze` == freeze all package details to be exported into a requirements file
 
 And coming soon:
 * `packtex search` == search for packages on CTAN
-* `packtex freeze` == freeze all package details to be exported into a requirements file
 * `packtex install -r` == install all packages from a requirements file

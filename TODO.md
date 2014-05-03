@@ -2,7 +2,6 @@ TODO
 ====
 
 * Add tests
-* Clean up code
 * Features
 	* Add pre-installed packages (`packtex init`?)
 	* Explicit error handling (`pip --exists-action [...]`)
@@ -10,8 +9,6 @@ TODO
 	* Install custom packages (i.e. not from CTAN)
 	* Install from requirements file (`pip install -r requirements.txt`)
 		* Dependency extraction from tex and sty files
-	* Mark dependencies with exact or fuzzy versions (`pip freeze`)
-		* Default: package>=installed,package<next_major_version?
 	* Search CTAN (pip search). Must be able to `packtex search algorithm` -> `algorithms`
 	* Operation logging
 * Standardize error handling with rollbacks

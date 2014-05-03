@@ -1,7 +1,7 @@
 from packtex import locations
 
 
-def run():
+def run(method):
 	installed = []
 	meta = open(locations.get_metadata_file(), 'r').readlines()
 	for line in meta:
@@ -9,4 +9,8 @@ def run():
 
 	installed.sort()
 	for inst in installed:
-		print '=='.join(inst.split('==')[:2])
+		splitted = inst.split('==')
+		if method == 'freeze':
+			print '=='.join(splitted[:2])
+		elif method == 'list':
+			print splitted[0] + ' (' + splitted[1] + ')'
