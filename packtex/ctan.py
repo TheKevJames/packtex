@@ -39,9 +39,11 @@ def get_data(package, parent=None):
 		else:
 			error.msg_not_on_ctan(package, fail=True)
 	if 'tex-archive/macros/latex/base' in url or 'tex-archive/macros/latex/required' in url:
-		error.msg_satisfied(package, parent, fail=True)
+		error.msg_satisfied(package, parent, fail=False)
+		return None, None
 	elif 'tex-archive/systems' in url:
-		error.msg_not_package(package, fail=True)
+		error.msg_not_package(package, fail=False)
+		return None, None
 
 	if url[-4] == '.' and url[-3:] in locations.get_valid_filetypes():
 		return get_version(cover) or 'unversioned', [url]

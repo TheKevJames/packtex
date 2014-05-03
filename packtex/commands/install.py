@@ -290,7 +290,8 @@ def run(package, parent=None):
 	pkg = package.lower()
 	if local_info.installed(pkg):
 		data = local_info.get_data(pkg)
-		error.msg_satisfied(data[0] + '==' + data[1], parent, fail=True)
+		error.msg_satisfied(data[0] + '==' + data[1], parent, fail=False)
 	else:
 		version, rows = ctan.get_data(pkg, parent)
-		run_workflow(package, parent, version, rows)
+		if version and rows:
+			run_workflow(package, parent, version, rows)
