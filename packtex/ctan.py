@@ -15,7 +15,7 @@ def get_data(package, parent=None):
 				rows.extend(table.find_all('tr')[1:])
 
 		for row in rows:
-			if row.td.get_text() == 'bibtex':
+			if 'i_directory' in row.td['class']:
 				html = urllib.urlopen('http://www.ctan.org' + row.a.get('href')).read()
 				rows.extend(get_rows(BeautifulSoup(html)))
 

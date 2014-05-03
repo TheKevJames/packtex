@@ -15,7 +15,6 @@ TODO
 	* Operation logging
 * Fix
 	* Filenames like `bst` are picked up as extensions (see `packtex install biblatex`)
-	* Does not copy subfolders properly (see `packtex install biblatex`)
 * Standardize error handling with rollbacks
 * Support alternate set ups
 	* OS
