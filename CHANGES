@@ -3,3 +3,7 @@ CHANGES
 
 alpha
 - Implemented basic manager
+
+beta
+- Cleaned up implementation
+- Cross-system compatibility fixes

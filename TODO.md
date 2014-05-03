@@ -8,10 +8,14 @@ TODO
 	* Handle user- and system-installed packages (kpsewhich)
 	* Install custom packages (i.e. not from CTAN)
 	* Install from requirements file (pip install -r requirements.txt)
+		* Dependency extraction from tex and sty files
 	* Mark dependencies with exact or fuzzy versions (pip freeze)
 		* Default: package>=installed,package<next_major_version?
-	* Search CTAN (pip search)
+	* Search CTAN (pip search). Must be able to `packtex search algorithm` -> `algorithms`
 	* Operation logging
+* Fix
+	* Filenames like `bst` are picked up as extensions (see `packtex install biblatex`)
+	* Does not copy subfolders properly (see `packtex install biblatex`)
 * Standardize error handling with rollbacks
 * Support alternate set ups
 	* OS
