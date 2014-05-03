@@ -249,6 +249,10 @@ def install_sources(provides, package):
 				orig = os.path.join(locations.get_install_dir(), f)
 				dest = os.path.join(dest_dir, f)
 				os.rename(orig, dest)
+
+				fl = orig[:-3] + 'tex'
+				if os.path.isfile(fl):
+					os.remove(fl)
 			elif f.endswith('.sty'):
 				dest_dir = locations.get_path('sty', package)
 				if not os.path.exists(dest_dir):

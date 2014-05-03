@@ -5,6 +5,7 @@ import sys
 paths = {
 	'afm': ['TEXMF', 'fonts', 'afm'],
 	'bst': ['TEXMF', 'bibtex', 'bst', 'PACKAGE'],
+	'bib': ['TEXMF', 'doc', 'PACKAGE'],
 	'cls': ['TEXMF', 'tex', 'latex', 'base'],
 	'def': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
 	'dtx': ['TEXMF', 'install'],
@@ -19,7 +20,7 @@ paths = {
 	'map': ['TEXMF', 'fonts', 'map'],
 	'mtx': ['TEXMF', 'install'],
 	'otf': ['FONT'],
-	'pdf': ['TEXMF', 'doc'],
+	'pdf': ['TEXMF', 'doc', 'PACKAGE'],
 	'pfb': ['TEXMF', 'fonts', 'type1'],
 	'sty': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
 	'tex': ['TEXMF', 'install'],
