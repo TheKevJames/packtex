@@ -47,7 +47,7 @@ def msg_satisfied(info, parent, fail=False):
 
 
 def updated(package, down, up, fail=False):
-	if down == up:
+	if down == up and down != 'unversioned':
 		print 'Requirement already up-to-date:', package
 		if fail:
 			sys.exit(-1)
