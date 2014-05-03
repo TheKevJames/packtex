@@ -4,7 +4,7 @@ from packtex import error
 from packtex.commands import info, install, show, uninstall, upgrade
 
 
-__version__ = 'v0.1.2-beta'
+__version__ = 'v0.1.3-beta'
 
 
 def get_params():
