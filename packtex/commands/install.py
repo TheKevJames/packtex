@@ -94,7 +94,7 @@ def download(package, soup, provides):
 		url = 'http://www.ctan.org' + url
 	urllib.urlretrieve(url, path)
 
-	if path[-3:] in {'bst', 'cls', 'sty'}:
+	if len(filename) > 4 and path[-4:] in {'.bst', '.cls', '.sty'}:
 		provides.append(path)
 
 
@@ -167,9 +167,9 @@ def install_sources(provides, package):
 			if not os.path.isfile(os.path.join(locations.get_install_dir(), f)):
 				continue
 
-			if f.endswith('dtx'):
+			if f.endswith('.dtx'):
 				for other in files:
-					if other.endswith('ins'):
+					if other.endswith('.ins'):
 						continue
 
 				try:
@@ -194,10 +194,10 @@ def install_sources(provides, package):
 					tex_dep = os.path.join(locations.get_install_dir(), f[:-3] + 'tex')
 					if os.path.isfile(tex_dep):
 						requires.extend(get_requirements(tex_dep))
-			elif f.endswith('dvi'):
+			elif f.endswith('.dvi'):
 				# subprocess.call(['dvipdfm', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
 				os.remove(os.path.join(locations.get_install_dir(), f))
-			elif f.endswith('ins'):
+			elif f.endswith('.ins'):
 				local_requires = []
 				tex_dep = os.path.join(locations.get_install_dir(), f[:-3] + 'tex')
 				if os.path.isfile(tex_dep):
@@ -241,7 +241,7 @@ def install_sources(provides, package):
 									provides.append(dest)
 
 					os.remove(os.path.join(locations.get_install_dir(), f))
-			elif f.endswith('pdf'):
+			elif f.endswith('.pdf'):
 				dest_dir = locations.get_path('pdf', package)
 				if not os.path.exists(dest_dir):
 					os.makedirs(dest_dir)
@@ -249,7 +249,7 @@ def install_sources(provides, package):
 				orig = os.path.join(locations.get_install_dir(), f)
 				dest = os.path.join(dest_dir, f)
 				os.rename(orig, dest)
-			elif f.endswith('sty'):
+			elif f.endswith('.sty'):
 				dest_dir = locations.get_path('sty', package)
 				if not os.path.exists(dest_dir):
 					os.makedirs(dest_dir)
@@ -261,7 +261,7 @@ def install_sources(provides, package):
 
 	if not requires:
 		for f in os.listdir(locations.get_install_dir()):
-			if f.endswith('tex'):
+			if f.endswith('.tex'):
 				dest_dir = locations.get_path('sty', package)
 				if not os.path.exists(dest_dir):
 					os.makedirs(dest_dir)
