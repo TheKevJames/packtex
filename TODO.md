@@ -7,8 +7,7 @@ TODO
 	* Explicit error handling (`pip --exists-action [...]`)
 	* Handle user- and system-installed packages (`kpsewhich`)
 	* Install custom packages (i.e. not from CTAN)
-	* Install from requirements file (`pip install -r requirements.txt`)
-		* Dependency extraction from tex and sty files
+	* Dependency extraction from tex and sty files (`packtex install-requirements wkrpt.tex`)
 	* Search CTAN (pip search). Must be able to `packtex search algorithm` -> `algorithms`
 	* Operation logging
 * Standardize error handling with rollbacks

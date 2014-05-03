@@ -290,6 +290,12 @@ def run(package, parent=None):
 		for pkg in package:
 			run(pkg)
 		return
+	else:
+		req_file = os.path.join(os.getcwd(), package)
+		if os.path.isfile(req_file):
+			for line in open(req_file, 'r').readlines():
+				run(line.split('==')[0])
+			return
 
 	pkg = package.lower()
 	if local_info.installed(pkg):

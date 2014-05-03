@@ -4,11 +4,11 @@ from packtex import error
 from packtex.commands import info, install, show, uninstall, upgrade
 
 
-__version__ = 'v0.1.1-beta'
+__version__ = 'v0.1.2-beta'
 
 
 def get_params():
-	parser = argparse.ArgumentParser(description='PackTeX is a package manager for all TeX derivatives', usage='packtex [-h] [-v] <command> <package name(s)>', add_help=False)
+	parser = argparse.ArgumentParser(description='PackTeX is a package manager for all *TeX derivatives.', usage='packtex [-h] [-v] <command> <package name(s)>', add_help=False)
 	required = parser.add_argument_group('required')
 	required.add_argument('command', nargs=1, help='Command to execute')
 	optional = parser.add_argument_group('options')
