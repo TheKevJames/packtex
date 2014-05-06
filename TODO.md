@@ -5,12 +5,11 @@ TODO
 * Features
 	* Add pre-installed packages (`packtex init`?)
 	* Explicit error handling (`pip --exists-action [...]`)
+		* Standardize error handling with rollbacks
 	* Handle user- and system-installed packages (`kpsewhich`)
 	* Install custom packages (i.e. not from CTAN)
-	* Dependency extraction from tex and sty files (`packtex install-requirements wkrpt.tex`)
 	* Search CTAN (pip search). Must be able to `packtex search algorithm` -> `algorithms`
-	* Operation logging
-* Standardize error handling with rollbacks
+* Look into TeXHash
 * Support alternate set ups
 	* OS
 		* Mac

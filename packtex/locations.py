@@ -45,11 +45,10 @@ else:
 	packtex_dir = os.path.join(home_dir, '.packtex')
 	tex_dir = os.path.join(home_dir, 'texmf')
 
-discard_dir = os.path.join(packtex_dir, 'discard')
+discard_dir = os.path.join(tex_dir, 'discard')
 install_dir = os.path.join(tex_dir, 'install')
 
 metadata = os.path.join(packtex_dir, '.metadata')
-log = os.path.join(packtex_dir, 'packtex.log')
 
 if not os.path.isfile(metadata):
 	if not os.path.exists(packtex_dir):

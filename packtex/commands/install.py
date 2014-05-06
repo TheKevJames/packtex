@@ -24,6 +24,11 @@ def get_requirements(fl):
 				pass
 			else:
 				requires.append(re.sub(r'\s*(\w+).*\n', r'\1', line).strip(' '))
+		elif line.startswith(r'\usepackage'):
+			if re.search(r'\{.*?\w.*?\}', line):
+				requires.extend([pack.strip(' ') for pack in re.sub(r'\\usepackage.*?\{(.*)\}.*\n', r'\1', line).split(',')])
+			else:
+				multiline = True
 	return requires
 
 
@@ -149,8 +154,6 @@ def run_workflow(package, parent, version, rows):
 		for line in folder.diff:
 			txt.write(line)
 			txt.write('\n')
-
-	# texhash?
 
 
 def install_sources(provides, package):
@@ -291,10 +294,15 @@ def run(package, parent=None):
 			run(pkg)
 		return
 	else:
-		req_file = os.path.join(os.getcwd(), package)
-		if os.path.isfile(req_file):
-			for line in open(req_file, 'r').readlines():
-				run(line.split('==')[0])
+		ext_file = os.path.join(os.getcwd(), package)
+		if os.path.isfile(ext_file):
+			if package.endswith('.txt'):
+				for line in open(ext_file, 'r').readlines():
+					run(line.split('==')[0])
+			elif package.endswith('.tex') or package.endswith('.sty'):
+				for req in get_requirements(ext_file):
+					run(req)
+
 			return
 
 	pkg = package.lower()
