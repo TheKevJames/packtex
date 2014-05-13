@@ -3,6 +3,7 @@ TODO
 
 * Add tests
 * Features
+	* Ability to install build systems (biblatex, etex, latex, luatex, pdflatex, xetex)
 	* Add pre-installed packages (`packtex init`?)
 	* Explicit error handling (`pip --exists-action [...]`)
 		* Standardize error handling with rollbacks
@@ -28,3 +29,6 @@ TODO
 		* MikTex
 		* TeXLive
 		* ...
+* Bugs
+	* `packtex install harnon-cv`
+	* `packtex install filehook`

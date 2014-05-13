@@ -18,10 +18,11 @@ Usage
 PackTeX supports all your standard package manager commands.
 
 * `packtex list` == list all installed packages and their version
-* `packtex show` == show info about an installed package, it's dependencies, etc.
+* `packtex show` == show info about an installed package, its dependencies, etc.
 * `packtex install` == install a package. If a filename (e.g. texrequirements.txt) is passed in, it will install all requirements from that file
 * `packtex uninstall` == uninstall a package
-* `packtex update` == update a package, if it's out of date.
+* `packtex reinstall` == force a package reinstallation
+* `packtex update` == update a package, if it's out of date
 * `packtex freeze` == freeze all package details to be exported into a requirements file
 
 And coming soon:

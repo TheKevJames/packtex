@@ -4,7 +4,7 @@ from . import error
 from .commands import (info, install, show, uninstall, upgrade)
 
 
-__version__ = 'v0.1.4-beta'
+__version__ = 'v0.1.5-beta'
 
 
 def get_params():
@@ -25,7 +25,7 @@ def execute_from_command_line():
     command, packages = get_params()
     error.valid_command(command[0], fail=True)
 
-    if command[0] == 'install':
+    if command[0] in {'install'}:
         error.arguments(command[0], packages, fail=True)
 
         install.run(packages)
@@ -35,6 +35,11 @@ def execute_from_command_line():
         error.arguments(command[0], packages, fail=True)
 
         uninstall.run(packages)
+    elif command[0] in {'reinstall'}:
+        error.arguments(command[0], packages, fail=True)
+
+        uninstall.run(packages)
+        install.run(packages)
     elif command[0] == 'show':
         error.arguments(command[0], packages, fail=True)
 

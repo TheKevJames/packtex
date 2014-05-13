@@ -4,20 +4,27 @@ import sys
 
 paths = {
     'afm': ['TEXMF', 'fonts', 'afm'],
-    'bst': ['TEXMF', 'bibtex', 'bst', 'PACKAGE'],
+    'bbx': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
     'bib': ['TEXMF', 'doc', 'PACKAGE'],
+    'bst': ['TEXMF', 'bibtex', 'bst', 'PACKAGE'],
+    'cbx': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
+    'cfg': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
     'cls': ['TEXMF', 'tex', 'latex', 'base'],
+    'csf': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
     'def': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
     'dtx': ['TEXMF', 'install'],
     'dvi': ['TEXMF', 'install'],
     'enc': ['TEXMF', 'fonts', 'enc'],
     'etx': ['TEXMF', 'install'],
     'fd':  ['TEXMF', 'tex', 'latex', 'fss'],
+    'ibx': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
+    'idf': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
     'ins': ['TEXMF', 'install'],
     'ist': ['TEXMF', 'discard'],
     'log': ['TEXMF', 'discard'],
     'lox': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
     'map': ['TEXMF', 'fonts', 'map'],
+    'mf':  ['TEXMF', 'fonts', 'mf'],
     'mtx': ['TEXMF', 'install'],
     'otf': ['FONT'],
     'pdf': ['TEXMF', 'doc', 'PACKAGE'],
@@ -28,6 +35,7 @@ paths = {
     'txt': ['TEXMF', 'discard'],
     'ttf': ['TEXMF', 'fonts', 'truetype'],
     'vf':  ['TEXMF', 'fonts', 'vf'],
+    'xml': ['TEXMF', 'tex', 'latex', 'PACKAGE'],
 }
 
 home_dir = os.path.expanduser('~')
@@ -73,7 +81,7 @@ def get_path(filetype, package):
         try:
             path = '/'.join(paths[filetype])
         except KeyError:
-            path = 'TEXMF/extras'
+            path = 'TEXMF/extras/PACKAGE'
     else:
         path = '/'.join(paths['sty'])
     path = path.replace('FONT', font_dir)
