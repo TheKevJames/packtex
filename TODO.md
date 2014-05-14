@@ -30,7 +30,6 @@ TODO
 		* TeXLive
 		* ...
 * Bugs
-	* `packtex install harnon-cv`
 	* Does not run Makefiles
 	* Dependency packages end up in wrong log
 	* See `failed_dependency' <- should be solved by `packtex search'

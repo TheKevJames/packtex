@@ -4,7 +4,7 @@ from . import error
 from .commands import (info, install, show, uninstall, upgrade)
 
 
-__version__ = 'v0.1.7-beta'
+__version__ = 'v0.1.8-beta'
 
 
 def get_params():

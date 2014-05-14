@@ -36,12 +36,14 @@ def get_requirements(fl):
                 requires.append(re.sub(r'\s*(\w+).*\n', r'\1', line).strip(' '))
         elif line.startswith(r'\usepackage'):
             if re.search(r'\{.*?\w.*?\}', line):
-                requires.extend([pack.strip(' ') for pack in re.sub(r'\\usepackage.*?\{(.*)\}.*\n', r'\1', line).split(',')])
+                requires.extend([pack.strip(' ') for pack in re.sub(r'\\usepackage.*\{(.*)\}.*(\n)?', r'\1', line).split(',')])
             else:
                 multiline = True
         elif line.startswith(r'\input'):
             if re.search(r'\\input\s.+\n', line):
-                requires.append(re.sub(r'\\input\s(.+)(\.|\s\%).*\n', r'\1', line))
+                pack = re.sub(r'\\input\s(.+).*?(\.[a-zA-Z]+)?\n', r'\1', line)
+                pack = pack.replace('.tex', '')
+                requires.append(pack)
             else:
                 pass
     return requires
@@ -85,7 +87,7 @@ class ProgressBar(object):
 
     def __enter__(self):
         self.current = 0
-        return self;
+        return self
 
     def tick(self):
         """Add one tick to progress bar"""
