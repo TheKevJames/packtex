@@ -41,7 +41,7 @@ def get_requirements(fl):
                 multiline = True
         elif line.startswith(r'\input'):
             if re.search(r'\\input\s.+\n', line):
-                requires.append(re.sub(r'\\input\s(.+)\..*\n', r'\1', line))
+                requires.append(re.sub(r'\\input\s(.+)(\.|\s\%).*\n', r'\1', line))
             else:
                 pass
     return requires
@@ -72,18 +72,28 @@ class FolderDiff(object):
 class ProgressBar(object):
     """Command line progress bar"""
     def __init__(self, msg, length):
-        sys.stdout.write(msg + ' [%s]' % (' ' * length))
+        self.current = 0
+        self.factor = 1
+        if length > 10:
+            self.factor = length / 10
+            mod = length % 10
+            length = 10 + mod
+
+        sys.stdout.write(msg + ' [%s] (downloading %s files)' % ((' ' * length), length))
         sys.stdout.flush()
-        sys.stdout.write('\b' * (length + 1))
+        sys.stdout.write('\b' * (length + 22 + len(str(length))))
 
     def __enter__(self):
-        pass
+        self.current = 0
+        return self;
 
-    @staticmethod
-    def tick():
+    def tick(self):
         """Add one tick to progress bar"""
-        sys.stdout.write('+')
-        sys.stdout.flush()
+        self.current += 1
+        if self.current == self.factor:
+            sys.stdout.write('+')
+            sys.stdout.flush()
+            self.current = 0
 
     def __exit__(self, *args):
         sys.stdout.write('\n')
@@ -127,10 +137,10 @@ def run_workflow(package, parent, version, rows):
             print ''
 
         provides = []
-        with ProgressBar('  Downloading ' + package, len(rows)):
+        with ProgressBar('  Downloading ' + package, len(rows)) as progress:
             for row in rows:
                 download(package, row, provides)
-                ProgressBar.tick()
+                progress.tick()
 
         failed_dependency = False
         while os.path.exists(locations.get_install_dir()) and not failed_dependency:
@@ -243,14 +253,20 @@ def install_sources(provides, package):
                     local_requires.extend(get_requirements(tex_dep))
 
                 for req in list(local_requires):
-                    if local_info.installed(req) or local_info.provided(req):
+                    if req == package:
                         local_requires.remove(req)
+                        continue
+                    elif local_info.installed(req) or local_info.provided(req):
+                        local_requires.remove(req)
+                        continue
                     for pack in provides:
                         name = re.sub(r'.*/(.*)\.(.*)', r'\1.\2', pack)
                         if req + '.sty' == name:
                             local_requires.remove(req)
+                            break
                         elif req == name:
                             local_requires.remove(req)
+                            break
 
                 if local_requires:
                     requires.extend(local_requires)

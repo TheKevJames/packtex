@@ -31,8 +31,7 @@ TODO
 		* ...
 * Bugs
 	* `packtex install harnon-cv`
-	* `packtex install filehook`
-	* Long TODO bars look stupid
 	* Does not run Makefiles
 	* Dependency packages end up in wrong log
 	* See `failed_dependency' <- should be solved by `packtex search'
+	* expl3 installs twice (with l3docstrip)
