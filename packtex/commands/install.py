@@ -8,6 +8,16 @@ import urllib
 from .. import (ctan, error, local_info, locations)
 
 
+def empty(fpath):
+    if os.path.isfile(fpath):
+        if os.path.getsize(fpath) > 0:
+            return False
+        else:
+            return True
+    else:
+        return True
+
+
 def get_requirements(fl):
     requires = []
     multiline = False
@@ -29,6 +39,11 @@ def get_requirements(fl):
                 requires.extend([pack.strip(' ') for pack in re.sub(r'\\usepackage.*?\{(.*)\}.*\n', r'\1', line).split(',')])
             else:
                 multiline = True
+        elif line.startswith(r'\input'):
+            if re.search(r'\\input\s.+\n', line):
+                requires.append(re.sub(r'\\input\s(.+)\..*\n', r'\1', line))
+            else:
+                pass
     return requires
 
 
@@ -117,17 +132,26 @@ def run_workflow(package, parent, version, rows):
                 download(package, row, provides)
                 ProgressBar.tick()
 
-        while os.path.exists(locations.get_install_dir()):
+        failed_dependency = False
+        while os.path.exists(locations.get_install_dir()) and not failed_dependency:
             provides, requires = install_sources(provides, package)
             for req in requires:
                 if not local_info.installed(req) and not local_info.provided(req):
-                    run(req, package)
+                    if run(req, package):
+                        provides.append(req)
+                    else:
+                        failed_dependency = True
+                        shutil.rmtree(locations.get_install_dir())
+
         provides = list(set(provides))
         provides.sort()
 
         requires = []
-        for fl in provides:
-            requires.extend(get_requirements(fl))
+        for fl in list(provides):
+            try:
+                requires.extend(get_requirements(fl))
+            except IOError:
+                provides.remove(fl)
         requires = list(set(requires))
         for pack in provides:
             name = re.sub(r'.*/(.*)\.(.*)', r'\1', pack)
@@ -141,7 +165,10 @@ def run_workflow(package, parent, version, rows):
 
         for req in requires:
             if not local_info.installed(req) and not local_info.provided(req):
-                run(req, package)
+                if run(req, package):
+                    pass
+                else:
+                    failed_dependency = True
 
         if os.path.exists(locations.get_discard_dir()):
             shutil.rmtree(locations.get_discard_dir())
@@ -154,6 +181,9 @@ def run_workflow(package, parent, version, rows):
         for line in folder.diff:
             txt.write(line)
             txt.write('\n')
+
+    if failed_dependency:
+        print 'Package may have installed incorrectly. Error: a dependency was not found on CTAN.'
 
 
 def install_sources(provides, package):
@@ -173,6 +203,8 @@ def install_sources(provides, package):
             if f.endswith('.dtx'):
                 for other in files:
                     if other.endswith('.ins'):
+                        continue
+                    elif other.endswith('.drv'):
                         continue
 
                 try:
@@ -197,20 +229,27 @@ def install_sources(provides, package):
                     tex_dep = os.path.join(locations.get_install_dir(), f[:-3] + 'tex')
                     if os.path.isfile(tex_dep):
                         requires.extend(get_requirements(tex_dep))
+            elif f.endswith('.drv'):
+                subprocess.call(['latex', '-interaction=batchmode', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
+                os.remove(os.path.join(locations.get_install_dir(), f))
             elif f.endswith('.dvi'):
                 # subprocess.call(['dvipdfm', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
                 os.remove(os.path.join(locations.get_install_dir(), f))
             elif f.endswith('.ins'):
                 local_requires = []
+                local_requires.extend(get_requirements(os.path.join(locations.get_install_dir(), f)))
                 tex_dep = os.path.join(locations.get_install_dir(), f[:-3] + 'tex')
                 if os.path.isfile(tex_dep):
-                    requires.extend(get_requirements(tex_dep))
+                    local_requires.extend(get_requirements(tex_dep))
 
                 for req in list(local_requires):
                     if local_info.installed(req) or local_info.provided(req):
                         local_requires.remove(req)
                     for pack in provides:
-                        if req + '.sty' == re.sub(r'.*/(.*)\.(.*)', r'\1.\2', pack):
+                        name = re.sub(r'.*/(.*)\.(.*)', r'\1.\2', pack)
+                        if req + '.sty' == name:
+                            local_requires.remove(req)
+                        elif req == name:
                             local_requires.remove(req)
 
                 if local_requires:
@@ -266,14 +305,18 @@ def install_sources(provides, package):
                 os.rename(orig, dest)
                 provides.append(dest)
 
+    install_dir = locations.get_install_dir()
     if not requires:
-        for f in os.listdir(locations.get_install_dir()):
-            if f.endswith('.tex'):
+        for f in os.listdir(install_dir):
+            orig = os.path.join(install_dir, f)
+
+            if empty(orig):
+                pass
+            elif f.endswith('.tex'):
                 dest_dir = locations.get_path('sty', package)
                 if not os.path.exists(dest_dir):
                     os.makedirs(dest_dir)
 
-                orig = os.path.join(locations.get_install_dir(), f)
                 dest = os.path.join(dest_dir, f)
                 os.rename(orig, dest)
             else:
@@ -281,10 +324,9 @@ def install_sources(provides, package):
                 if not os.path.exists(dest_dir):
                     os.makedirs(dest_dir)
 
-                orig = os.path.join(locations.get_install_dir(), f)
                 dest = os.path.join(dest_dir, f)
                 os.rename(orig, dest)
-        shutil.rmtree(locations.get_install_dir())
+        shutil.rmtree(install_dir)
     return provides, requires
 
 
@@ -313,3 +355,6 @@ def run(package, parent=None):
         version, rows = ctan.get_data(pkg, parent)
         if version and rows:
             run_workflow(package, parent, version, rows)
+        elif rows == '-1':
+            return False
+    return True

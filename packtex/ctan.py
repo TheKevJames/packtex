@@ -15,9 +15,10 @@ def get_data(package, parent=None):
                 rows.extend(table.find_all('tr')[1:])
 
         for row in rows:
-            if 'i_directory' in row.td['class']:
-                html = urllib.urlopen('http://www.ctan.org' + row.a.get('href')).read()
-                rows.extend(get_rows(BeautifulSoup(html)))
+            if 'class' in row.td and 'i_directory' in row.td['class']:
+                if row.td.get_text() not in {'testfiles'}:
+                    html = urllib.urlopen('http://www.ctan.org' + row.a.get('href')).read()
+                    rows.extend(get_rows(BeautifulSoup(html)))
 
         return rows
 
@@ -37,7 +38,8 @@ def get_data(package, parent=None):
         if 'Apache Tomcat' in cover or '503 Service Temporarily Unavailable' in cover:
             error.msg_ctan_down(fail=True)
         else:
-            error.msg_not_on_ctan(package, fail=True)
+            error.msg_not_on_ctan(package, fail=False)
+            return None, -1
     if 'tex-archive/macros/latex/base' in url or 'tex-archive/macros/latex/required' in url:
         error.msg_satisfied(package, parent, fail=False)
         return None, None
