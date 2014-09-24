@@ -3,9 +3,8 @@ PackTeX
 
 [![Version](https://badge.fury.io/py/packtex.png)](https://pypi.python.org/pypi/packtex)
 [![Downloads](https://pypip.in/d/packtex/badge.png)](https://pypi.python.org/pypi/packtex)
-[![Build Status](https://travis-ci.org/TheKevJames/packtex.svg?branch=master)](https://travis-ci.org/TheKevJames/packtex)
-[![Coverage Status](https://coveralls.io/repos/TheKevJames/packtex/badge.png?branch=master)](https://coveralls.io/r/TheKevJames/packtex?branch=master)
-[![Dependency Status](https://gemnasium.com/TheKevJames/packtex.svg)](https://gemnasium.com/TheKevJames/packtex)
+[![Build Status](https://api.shippable.com/projects/540f508d5adf368bc3902886/badge?branchName=master)](https://app.shippable.com/projects/540f508d5adf368bc3902886/builds/latest)
+[![Requirements Status](https://requires.io/github/TheKevJames/packtex/requirements.svg?branch=master)](https://requires.io/github/TheKevJames/packtex/requirements/?branch=master)
 
 PackTeX is an easy-to-use, platform-agnostic *TeX package manager.
 
