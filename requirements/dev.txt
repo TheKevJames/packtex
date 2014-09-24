@@ -1,13 +1,13 @@
 -r common.txt
 
-Jinja2==2.7.2
-MarkupSafe==0.21
+Jinja2==2.7.3
+MarkupSafe==0.23
 Pygments==1.6
-Sphinx==1.2.2
-cov-core==1.7
+Sphinx==1.2.3
+cov-core==1.14.0
 coverage==3.7.1
-docutils==0.11
-py==1.4.20
-pytest==2.5.2
-pytest-cov==1.6
-wheel==0.23.0
+docutils==0.12
+py==1.4.25
+pytest==2.6.3
+pytest-cov==1.8.0
+wheel==0.24.0
