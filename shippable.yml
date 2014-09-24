@@ -1,0 +1,19 @@
+language: python
+
+python:
+  - 2.7
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - mkdir -p shippable/codecoverage
+  - mkdir -p shippable/testresults
+
+script:
+  - nosetests --with-xunit --xunit-file=shippable/testresults/nosetests.xml
+  - coverage run --branch --source=packtex setup.py test
+  - coverage xml -o shippable/codecoverage/coverage.xml
+
+notifications:
+  email: false
