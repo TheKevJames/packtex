@@ -6,5 +6,5 @@ Pygments==2.0.2
 Sphinx==1.3.1
 coverage==3.7.1
 docutils==0.12
-nose==1.3.4
+nose==1.3.6
 wheel==0.24.0
