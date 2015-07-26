@@ -1,11 +1,18 @@
 CHANGES
 =======
 
-alpha
-- Implemented basic manager
-
 beta
+----
+
 - Cleaned up implementation
+
 - Cross-system compatibility fixes
+
 - Implemented requirements files
+
 - Implemented auto-install dependencies from source files
+
+alpha
+-----
+
+- Implemented basic manager

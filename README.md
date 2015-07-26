@@ -1,10 +1,11 @@
 PackTeX
 =======
 
-[![Version](https://badge.fury.io/py/packtex.png)](https://pypi.python.org/pypi/packtex)
-[![Downloads](https://pypip.in/d/packtex/badge.png)](https://pypi.python.org/pypi/packtex)
-[![Build Status](https://api.shippable.com/projects/540f508d5adf368bc3902886/badge?branchName=master)](https://app.shippable.com/projects/540f508d5adf368bc3902886/builds/latest)
-[![Requirements Status](https://requires.io/github/TheKevJames/packtex/requirements.svg?branch=master)](https://requires.io/github/TheKevJames/packtex/requirements/?branch=master)
+[![Version](https://img.shields.io/pypi/v/packtex.svg)](https://pypi.python.org/pypi/packtex)
+[![Downloads](https://img.shields.io/pypi/dm/packtex.svg)](https://pypi.python.org/pypi/packtex)
+[![Code Quality](https://img.shields.io/codacy/f99d041848054bf18b909cee1bcf866c.svg)](https://www.codacy.com/app/KevinJames/packtex)
+[![Build Status](https://img.shields.io/circleci/project/TheKevJames/packtex.svg)](https://circleci.com/gh/TheKevJames/packtex)
+[![Requirements](https://img.shields.io/requires/github/TheKevJames/packtex.svg)](https://requires.io/github/TheKevJames/packtex/requirements)
 
 PackTeX is an easy-to-use, platform-agnostic *TeX package manager.
 
@@ -12,7 +13,7 @@ PackTeX lets you manage all of your *TeX packages together, in the same way, wit
 
 Installation
 ============
-PackTeX is now available from [PyPI](https://pypi.python.org/pypi/packtex/)! You can instll the latest beta with:
+PackTeX is now available from [PyPI](https://pypi.python.org/pypi/packtex/)! You can install the latest beta with:
 
     pip install packtex --pre
 

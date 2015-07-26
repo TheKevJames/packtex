@@ -1,1 +1,1 @@
--r requirements/dev.txt
+beautifulsoup4==4.4.0

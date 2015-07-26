@@ -1,83 +1,46 @@
 #!/usr/bin/env python
-import io
-import os
-from pip.req import parse_requirements
-import re
-from setuptools import find_packages, setup
-from setuptools.command.test import test as TestCommand
-import sys
+import setuptools
+
+from packtex import __version__
 
 
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist bdist_wheel upload')
-    sys.exit()
+# For reasons why you shouldn't do this, see:
+#   https://caremad.io/blog/setup-vs-requirement/
+# For all the fucks I give see:
+#   /dev/zero
+with open('requirements.txt', 'r') as f:
+    requirements = f.read().splitlines()
+    requirements = filter(lambda x: '==' in x, requirements)
+with open('requirements-dev.txt', 'r') as f:
+    requirements_dev = f.read().splitlines()
+    requirements_dev = filter(lambda x: '==' in x, requirements_dev)
 
 
-def read(*filenames, **kwargs):
-    encoding = kwargs.get('encoding', 'utf-8')
-    sep = kwargs.get('sep', '\n')
-    buf = []
-    for filename in filenames:
-        with io.open(filename, encoding=encoding) as f:
-            buf.append(f.read())
-    return sep.join(buf)
-
-
-def find_version(*file_paths):
-    version_file = read(os.path.join(*file_paths))
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError('Unable to find version string.')
-
-try:
-    long_description = read('README.rst')
-except IOError:
-    long_description = read('README.md')
-
-requires = [str(ir.req) for ir in parse_requirements('requirements/prod.txt')]
-
-
-class PyTest(TestCommand):
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import pytest
-
-        errcode = pytest.main(self.test_args)
-        sys.exit(errcode)
-
-
-setup(
+setuptools.setup(
     name='packtex',
-    version=find_version('packtex', '__init__.py'),
-    description='An easy-to-use, platform-agnostic *TeX package manager',
-    long_description=long_description,
+    version=__version__,
+    description='packtex',
+    long_description='An easy-to-use, platform-agnostic *TeX package manager',
     keywords='packtex',
     author='Kevin James',
     author_email='KevinJames@thekev.in',
     url='https://github.com/TheKevJames/packtex.git',
     license='MIT License',
-    packages=find_packages(exclude=['test']),
-    include_package_data=True,
+    packages=setuptools.find_packages(exclude=['test']),
+    install_requires=requirements,
+    tests_require=requirements_dev,
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Python',
+    ],
+    test_suite='tests',
+    extras_require={
+        'testing': requirements_dev,
+    },
     entry_points={'console_scripts': [
         'packtex = packtex:execute_from_command_line',
     ]},
-    install_requires=requires,
-    tests_require=['pytest'],
-    zip_safe=False,
-    classifiers=[
-        'Programming Language :: Python',
-        'Development Status :: 4 - Beta',
-        'Natural Language :: English',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-    ],
-    test_suite='test',
-    extras_require={
-        'testing': ['pytest'],
-    },
 )
