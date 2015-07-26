@@ -24,7 +24,9 @@ def get_requirements(fl):
     for line in open(fl, 'r').readlines():
         if line.startswith(r'\RequirePackage'):
             if re.search(r'\{.*?\w.*?\}', line):
-                requires.extend([pack.strip(' ') for pack in re.sub(r'\\RequirePackage(WithOptions)?.*?\{(.*)\}.*\n', r'\2', line).split(',')])
+                requires.extend([pack.strip(' ') for pack in re.sub(
+                    r'\\RequirePackage(WithOptions)?.*?\{(.*)\}.*\n', r'\2',
+                    line).split(',')])
             else:
                 multiline = True
         elif multiline:
@@ -33,10 +35,12 @@ def get_requirements(fl):
             elif '{' in line:
                 pass
             else:
-                requires.append(re.sub(r'\s*(\w+).*\n', r'\1', line).strip(' '))
+                requires.append(re.sub(r'\s*(\w+).*\n', r'\1',
+                                       line).strip(' '))
         elif line.startswith(r'\usepackage'):
             if re.search(r'\{.*?\w.*?\}', line):
-                requires.extend([pack.strip(' ') for pack in re.sub(r'\\usepackage.*\{(.*)\}.*(\n)?', r'\1', line).split(',')])
+                requires.extend([pack.strip(' ') for pack in re.sub(
+                    r'\\usepackage.*\{(.*)\}.*(\n)?', r'\1', line).split(',')])
             else:
                 multiline = True
         elif line.startswith(r'\input'):
@@ -60,7 +64,9 @@ class FolderDiff(object):
 
     def get_state(self):
         """Get the current directory state"""
-        return [os.path.join(dp, f) for dp, _, fn in os.walk(self.dir) for f in fn]
+        return [os.path.join(dp, f)
+                for dp, _, fn in os.walk(self.dir)
+                for f in fn]
 
     def __enter__(self):
         self.initial = self.get_state()
@@ -81,7 +87,8 @@ class ProgressBar(object):
             mod = length % 10
             length = 10 + mod
 
-        sys.stdout.write(msg + ' [%s] (downloading %s files)' % ((' ' * length), length))
+        sys.stdout.write(msg + ' [%s] (downloading %s files)' %
+                         ((' ' * length), length))
         sys.stdout.flush()
         sys.stdout.write('\b' * (length + 22 + len(str(length))))
 
@@ -145,10 +152,12 @@ def run_workflow(package, parent, version, rows):
                 progress.tick()
 
         failed_dependency = False
-        while os.path.exists(locations.get_install_dir()) and not failed_dependency:
+        while (os.path.exists(locations.get_install_dir()) and
+               not failed_dependency):
             provides, requires = install_sources(provides, package)
             for req in requires:
-                if not local_info.installed(req) and not local_info.provided(req):
+                if (not local_info.installed(req) and
+                        not local_info.provided(req)):
                     if run(req, package):
                         provides.append(req)
                     else:
@@ -172,7 +181,8 @@ def run_workflow(package, parent, version, rows):
         requires.sort()
 
         with open(locations.get_metadata_file(), 'a') as meta:
-            meta.write('=='.join([package, version, '='.join(provides), '='.join(requires)]))
+            meta.write('=='.join([package, version, '='.join(provides),
+                                  '='.join(requires)]))
             meta.write('\n')
 
         for req in requires:
@@ -195,7 +205,8 @@ def run_workflow(package, parent, version, rows):
             txt.write('\n')
 
     if failed_dependency:
-        print 'Package may have installed incorrectly. Error: a dependency was not found on CTAN.'
+        print ('Package may have installed incorrectly. '
+               'Error: a dependency was not found on CTAN.')
 
 
 def install_sources(provides, package):
@@ -209,7 +220,8 @@ def install_sources(provides, package):
 
         requires = []
         for f in files:
-            if not os.path.isfile(os.path.join(locations.get_install_dir(), f)):
+            if not os.path.isfile(os.path.join(locations.get_install_dir(),
+                                               f)):
                 continue
 
             if f.endswith('.dtx'):
@@ -221,7 +233,9 @@ def install_sources(provides, package):
 
                 try:
                     print '  building', f[:-4]
-                    subprocess.call(['tex', '-interaction=batchmode', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
+                    subprocess.call(['tex', '-interaction=batchmode', f],
+                                    stdout=open(os.devnull, 'w'),
+                                    cwd=locations.get_install_dir())
 
                     dest_dir = locations.get_path('sty', package)
                     if not os.path.exists(dest_dir):
@@ -238,19 +252,25 @@ def install_sources(provides, package):
 
                     provides.append(dest)
                 except OSError:
-                    tex_dep = os.path.join(locations.get_install_dir(), f[:-3] + 'tex')
+                    tex_dep = os.path.join(locations.get_install_dir(),
+                                           f[:-3] + 'tex')
                     if os.path.isfile(tex_dep):
                         requires.extend(get_requirements(tex_dep))
             elif f.endswith('.drv'):
-                subprocess.call(['latex', '-interaction=batchmode', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
+                subprocess.call(['latex', '-interaction=batchmode', f],
+                                stdout=open(os.devnull, 'w'),
+                                cwd=locations.get_install_dir())
                 os.remove(os.path.join(locations.get_install_dir(), f))
             elif f.endswith('.dvi'):
-                # subprocess.call(['dvipdfm', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
+                # subprocess.call(['dvipdfm', f], stdout=open(os.devnull, 'w'),
+                #                 cwd=locations.get_install_dir())
                 os.remove(os.path.join(locations.get_install_dir(), f))
             elif f.endswith('.ins'):
                 local_requires = []
-                local_requires.extend(get_requirements(os.path.join(locations.get_install_dir(), f)))
-                tex_dep = os.path.join(locations.get_install_dir(), f[:-3] + 'tex')
+                local_requires.extend(get_requirements(os.path.join(
+                    locations.get_install_dir(), f)))
+                tex_dep = os.path.join(locations.get_install_dir(),
+                                       f[:-3] + 'tex')
                 if os.path.isfile(tex_dep):
                     local_requires.extend(get_requirements(tex_dep))
 
@@ -274,26 +294,36 @@ def install_sources(provides, package):
                     requires.extend(local_requires)
                 else:
                     print '  building', f[:-4]
-                    subprocess.call(['latex', '-interaction=batchmode', f], stdout=open(os.devnull, 'w'), cwd=locations.get_install_dir())
+                    subprocess.call(['latex', '-interaction=batchmode', f],
+                                    stdout=open(os.devnull, 'w'),
+                                    cwd=locations.get_install_dir())
 
-                    for line in open(os.path.join(locations.get_install_dir(), f), 'r').readlines():
+                    for line in open(os.path.join(locations.get_install_dir(),
+                                                  f), 'r').readlines():
                         if line.startswith(r'\generate'):
                             if 'file' in line:
-                                sty, dtx = re.sub(r'\\generate.*\\file.*?\{(.*\..*)\}.*\\from.*?\{(.*\.[^\}]*)\}.*', r'\1\t\2', line).split('\t')
-                                sty, dtx = sty.replace('\n', ''), dtx.replace('\n', '')
+                                sty, dtx = re.sub(
+                                    (r'\\generate.*\\file.*?\{(.*\..*)\}.*\\'
+                                     r'from.*?\{(.*\.[^\}]*)\}.*', r'\1\t\2'),
+                                    line).split('\t')
+                                sty = sty.replace('\n', '')
+                                dtx = dtx.replace('\n', '')
 
                                 filetype = sty[-3:]
                                 if filetype == 'tex':
                                     filetype = 'sty'
-                                dest_dir = locations.get_path(filetype, package)
+                                dest_dir = locations.get_path(filetype,
+                                                              package)
                                 if not os.path.exists(dest_dir):
                                     os.makedirs(dest_dir)
 
-                                orig = os.path.join(locations.get_install_dir(), sty)
+                                orig = os.path.join(
+                                    locations.get_install_dir(), sty)
                                 dest = os.path.join(dest_dir, sty)
                                 os.rename(orig, dest)
 
-                                dtx_path = os.path.join(locations.get_install_dir(), dtx)
+                                dtx_path = os.path.join(
+                                    locations.get_install_dir(), dtx)
                                 if os.path.isfile(dtx_path):
                                     os.remove(dtx_path)
 
