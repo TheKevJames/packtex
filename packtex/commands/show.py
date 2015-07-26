@@ -16,5 +16,6 @@ def run(package):
     print '-----'
     print 'Name:', data[0]
     print 'Version:', data[1]
-    print 'Provides:', ', '.join([re.sub(r'(.*/)|(\n)', '', fl) for fl in data[2].split('=')])
+    print 'Provides:', ', '.join([re.sub(r'(.*/)|(\n)', '', fl)
+                                  for fl in data[2].split('=')])
     print 'Requires:', ', '.join(data[3].split('=')).replace('\n', '')

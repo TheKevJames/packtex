@@ -1,0 +1,10 @@
+general:
+  artifacts:
+    - "htmlcov/*"
+dependencies:
+  override:
+    - pip install -r requirements.txt
+    - pip install -r requirements-dev.txt
+test:
+  override:
+    - py.test --cov-config .coveragerc --cov-report html --cov .
